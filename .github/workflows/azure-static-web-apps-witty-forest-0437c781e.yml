@@ -35,12 +35,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Remove node_modules before deploy
-        run: rm -rf node_modules
-
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
-        working-directory: ${{ runner.temp }}
 
       - name: Get Id Token
         uses: actions/github-script@v6
@@ -50,6 +46,9 @@ jobs:
             const coredemo = require('@actions/core')
             return await coredemo.getIDToken()
           result-encoding: string
+
+      - name: Remove node_modules before deploy
+        run: rm -rf node_modules
 
       - name: Build And Deploy
         id: builddeploy
