@@ -100,7 +100,7 @@ export function useHealthData(selectedChild: string, historyFilter: HealthHistor
       .sort((a, b) => a.year !== b.year ? a.year - b.year : a.period.localeCompare(b.period))
       .map(r => ({
         label: `${PERIOD_LABELS[r.period].split(' ')[1] ?? PERIOD_LABELS[r.period]} ${r.year}`,
-        avg: +(r.grades.reduce((s, g) => s + g.grade / g.maxGrade * 10, 0) / r.grades.length).toFixed(1),
+        avg: +(r.grades!.reduce((s, g) => s + g.grade / g.maxGrade * 10, 0) / r.grades!.length).toFixed(1),
       })),
     [childReports],
   )

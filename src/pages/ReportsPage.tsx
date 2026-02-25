@@ -160,7 +160,7 @@ export default function ReportsPage() {
                     <button
                       className="btn-secondary flex items-center gap-1.5 text-sm py-1.5"
                       aria-label="Pré-visualizar relatório"
-                      onClick={() => { setPreviewReport(report); setSignatureStep('idle'); setSignaturePin('') }}
+                      onClick={() => { setPreviewReport(report) }}
                     >
                       <Eye size={14} aria-hidden="true" />
                       Preview

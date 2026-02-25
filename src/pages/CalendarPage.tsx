@@ -136,10 +136,9 @@ export default function CalendarPage() {
         `DTSTART:${fmt(dtStart)}`,
         `DTEND:${fmt(dtEnd)}`,
         `SUMMARY:${evt.title}`,
-        evt.location ? `LOCATION:${evt.location}` : '',
         `STATUS:${evt.status === 'CONFIRMADO' ? 'CONFIRMED' : 'TENTATIVE'}`,
         'END:VEVENT',
-      ).filter(Boolean)
+      )
     })
     specialDates.filter(sd => sd.childIds.includes(selectedChild)).forEach(sd => {
       lines.push(
@@ -148,9 +147,9 @@ export default function CalendarPage() {
         `DTSTART;VALUE=DATE:${sd.startDate.replace(/-/g,'')}`,
         `DTEND;VALUE=DATE:${sd.endDate.replace(/-/g,'')}`,
         `SUMMARY:${sd.title}`,
-        sd.notes ? `DESCRIPTION:${sd.notes}` : '',
+        ...(sd.notes ? [`DESCRIPTION:${sd.notes}`] : []),
         'END:VEVENT',
-      ).filter(Boolean)
+      )
     })
     lines.push('END:VCALENDAR')
     const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' })
