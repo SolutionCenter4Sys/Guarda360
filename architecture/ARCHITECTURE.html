@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guarda360° — Arquitetura do Sistema v2.0</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --primary:       #1D4ED8;
+      --primary-light: #3B82F6;
+      --primary-dark:  #1e3a8a;
+      --accent:        #06B6D4;
+      --success:       #10B981;
+      --warning:       #F59E0B;
+      --danger:        #EF4444;
+      --purple:        #8B5CF6;
+      --azure:         #0078D4;
+      --azure-light:   #50B0F0;
+      --dotnet:        #512BD4;
+      --dotnet-light:  #9B6CF0;
+      --bg:            #0F172A;
+      --bg-card:       #1E293B;
+      --bg-card2:      #253348;
+      --border:        #334155;
+      --text:          #E2E8F0;
+      --text-muted:    #94A3B8;
+      --text-dim:      #64748B;
+      --radius:        12px;
+      --shadow:        0 4px 24px rgba(0,0,0,.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+    nav {
+      width: 260px;
+      min-width: 260px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      overflow-y: auto;
+      padding: 0 0 24px;
+      z-index: 100;
+    }
+
+    .nav-header {
+      padding: 28px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 22px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-subtitle {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .nav-version {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 10px;
+      background: var(--primary-dark);
+      color: var(--primary-light);
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .nav-stack-badge {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 10px;
+      background: rgba(0,120,212,.25);
+      color: var(--azure-light);
+      padding: 2px 8px;
+      border-radius: 99px;
+      border: 1px solid rgba(0,120,212,.35);
+    }
+
+    nav ul { list-style: none; padding: 12px 0; }
+
+    nav ul li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: all .18s;
+      border-left: 3px solid transparent;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: var(--primary-light);
+      background: rgba(59,130,246,.08);
+      border-left-color: var(--primary-light);
+    }
+
+    nav ul li a .icon { font-size: 16px; }
+
+    .nav-section-label {
+      padding: 16px 20px 6px;
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    /* ── MAIN ── */
+    main {
+      margin-left: 260px;
+      flex: 1;
+      padding: 48px 48px 80px;
+      max-width: 1100px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center;
+      margin-bottom: 56px;
+      padding: 48px 32px;
+      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(0,120,212,.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .page-header::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(81,43,212,.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .page-header h1 {
+      font-size: 36px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 40%, var(--azure-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      margin-top: 12px;
+      font-size: 15px;
+      position: relative;
+    }
+
+    .header-badges {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-weight: 600;
+      letter-spacing: .03em;
+    }
+
+    .badge-blue   { background: rgba(29,78,216,.25);   color: #93C5FD; border: 1px solid rgba(59,130,246,.3); }
+    .badge-green  { background: rgba(16,185,129,.2);   color: #6EE7B7; border: 1px solid rgba(16,185,129,.3); }
+    .badge-cyan   { background: rgba(6,182,212,.2);    color: #67E8F9; border: 1px solid rgba(6,182,212,.3);  }
+    .badge-purple { background: rgba(139,92,246,.2);   color: #C4B5FD; border: 1px solid rgba(139,92,246,.3); }
+    .badge-azure  { background: rgba(0,120,212,.25);   color: #50B0F0; border: 1px solid rgba(0,120,212,.35); }
+    .badge-dotnet { background: rgba(81,43,212,.25);   color: #9B6CF0; border: 1px solid rgba(81,43,212,.35); }
+
+    /* ── SECTION ── */
+    section {
+      margin-bottom: 56px;
+      scroll-margin-top: 32px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      margin-left: 12px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── DIAGRAM BOX ── */
+    .diagram-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      box-shadow: var(--shadow);
+    }
+
+    .diagram-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ── TABLES ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      background: var(--bg-card2);
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(51,65,85,.5);
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(59,130,246,.05); }
+
+    code {
+      font-family: 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
+      font-size: 12px;
+      background: rgba(15,23,42,.8);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 5px;
+      color: var(--accent);
+    }
+
+    pre code {
+      display: block;
+      padding: 16px;
+      overflow-x: auto;
+      background: rgba(15,23,42,.9);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #e2e8f0;
+      line-height: 1.7;
+    }
+
+    /* ── GRID ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    @media (max-width: 900px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    /* ── STAT CARDS ── */
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--azure-light), var(--dotnet-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── ADR CARDS ── */
+    .adr-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 14px;
+    }
+
+    .adr-id {
+      font-size: 11px;
+      color: var(--primary-light);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .adr-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin: 4px 0 10px;
+    }
+
+    .adr-body { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+    .adr-body strong { color: var(--text); }
+
+    /* ── TAG ── */
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 9px;
+      border-radius: 6px;
+      font-weight: 600;
+      margin: 2px;
+    }
+
+    .tag-fe    { background: rgba(59,130,246,.18);  color: #93C5FD; }
+    .tag-be    { background: rgba(81,43,212,.22);   color: #9B6CF0; }
+    .tag-db    { background: rgba(245,158,11,.18);  color: #FCD34D; }
+    .tag-infra { background: rgba(0,120,212,.22);   color: #50B0F0; }
+    .tag-sec   { background: rgba(139,92,246,.18);  color: #C4B5FD; }
+
+    /* ── IMMUTABLE HIGHLIGHT ── */
+    .immutable-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(239,68,68,.18);
+      color: #FCA5A5;
+      border: 1px solid rgba(239,68,68,.3);
+      font-weight: 700;
+      letter-spacing: .04em;
+      margin-left: 6px;
+    }
+
+    /* ── MODULE PILLS ── */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .module-pill {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .module-pill-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .module-pill-tech {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* ── MAPPING TABLE ── */
+    .mapping-old { color: #FCA5A5; text-decoration: line-through; font-size: 12px; }
+    .mapping-new { color: var(--azure-light); font-weight: 600; font-size: 12px; }
+    .arrow-cell  { color: var(--text-dim); font-size: 16px; text-align: center; }
+
+    /* ── COST TABLE ── */
+    .cost-total td {
+      font-weight: 800;
+      color: var(--azure-light) !important;
+      background: rgba(0,120,212,.07);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: var(--text-dim);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 24px;
+    }
+
+    /* ── SCROLL ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<nav>
+  <div class="nav-header">
+    <div class="nav-logo">Guarda360°</div>
+    <div class="nav-subtitle">Arquitetura do Sistema</div>
+    <div class="nav-version">v2.0 · 2026-02-24</div>
+    <div class="nav-stack-badge">☁️ Azure · .NET 8</div>
+  </div>
+  <div class="nav-section-label">Visão Geral</div>
+  <ul>
+    <li><a href="#overview"><span class="icon">🏠</span> Visão Geral</a></li>
+    <li><a href="#stack"><span class="icon">⚙️</span> Stack Tecnológica</a></li>
+    <li><a href="#migration"><span class="icon">🔄</span> Migração AWS → Azure</a></li>
+    <li><a href="#adrs"><span class="icon">📋</span> Decisões (ADRs)</a></li>
+  </ul>
+  <div class="nav-section-label">Diagramas C4</div>
+  <ul>
+    <li><a href="#c4-l1"><span class="icon">🌐</span> L1 — Contexto</a></li>
+    <li><a href="#c4-l2"><span class="icon">📦</span> L2 — Containers</a></li>
+    <li><a href="#c4-l3"><span class="icon">🔧</span> L3 — Componentes</a></li>
+  </ul>
+  <div class="nav-section-label">Dados & Infra</div>
+  <ul>
+    <li><a href="#er"><span class="icon">🗄️</span> Diagrama ER</a></li>
+    <li><a href="#infra"><span class="icon">☁️</span> Infraestrutura Azure</a></li>
+    <li><a href="#flows"><span class="icon">🔄</span> Fluxos de Dados</a></li>
+  </ul>
+  <div class="nav-section-label">Qualidade</div>
+  <ul>
+    <li><a href="#nfr"><span class="icon">📊</span> Req. Não-Funcionais</a></li>
+    <li><a href="#security"><span class="icon">🔐</span> Segurança</a></li>
+    <li><a href="#costs"><span class="icon">💰</span> Custos Azure</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<main>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Guarda360° — Arquitetura</h1>
+    <p>Plataforma de Gestão de Guarda Compartilhada com Valor Jurídico · v2.0 — .NET 8 + Azure</p>
+    <div class="header-badges">
+      <span class="badge badge-blue">React 18 + TypeScript</span>
+      <span class="badge badge-dotnet">.NET 8 + ASP.NET Core</span>
+      <span class="badge badge-azure">Microsoft Azure</span>
+      <span class="badge badge-cyan">PostgreSQL 16 + SignalR</span>
+      <span class="badge badge-purple">Clean Architecture + CQRS</span>
+    </div>
+  </div>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-title"><span>🏠</span> Visão Geral</div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-card">
+        <div class="stat-value">7</div>
+        <div class="stat-label">Épicos MVP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">24</div>
+        <div class="stat-label">Features Priorizadas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">12</div>
+        <div class="stat-label">Semanas de MVP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">~$308</div>
+        <div class="stat-label">Custo Azure/mês</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📝 Sobre o Produto</div>
+      <p style="color:var(--text-muted);font-size:14px;line-height:1.75">
+        O <strong style="color:#fff">Guarda360°</strong> é uma plataforma legal-tech para gestão de guarda compartilhada,
+        projetada para registrar de forma imutável e auditável todas as interações entre responsáveis —
+        calendário de convivência, comunicação monitorada, gestão financeira (pensão e despesas extraordinárias),
+        ocorrências com evidências e geração de relatórios judiciais em PDF com hash SHA-256.
+        Todos os dados críticos possuem valor jurídico comprovável graças à imutabilidade garantida por triggers
+        PostgreSQL e pelo <code>SaveChangesInterceptor</code> do Entity Framework Core.
+      </p>
+      <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px">
+        <span class="tag tag-fe">Frontend: React SPA + Azure Static Web Apps</span>
+        <span class="tag tag-be">Backend: ASP.NET Core 8 REST + SignalR</span>
+        <span class="tag tag-db">DB: PostgreSQL 16 INSERT-only (Azure Flexible Server)</span>
+        <span class="tag tag-infra">Infra: Azure App Service · Blob · SignalR Service · Service Bus</span>
+        <span class="tag tag-sec">Segurança: RLS + SHA-256 + ASP.NET Identity + Key Vault</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎯 Épicos do MVP</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Épico</th>
+            <th>Módulo</th>
+            <th>Principais Features</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>EP-01</strong></td><td>Identidade & Acesso</td><td>Registro, login, RBAC Policy-based, 2FA TOTP (ASP.NET Core Identity)</td></tr>
+          <tr><td><strong>EP-02</strong></td><td>Custódia & Convivência</td><td>Calendário, check-in/check-out, registro de visitas</td></tr>
+          <tr><td><strong>EP-03</strong></td><td>Comunicação Monitorada</td><td>Chat imutável (SignalR), marcação de mensagens relevantes</td></tr>
+          <tr><td><strong>EP-04</strong></td><td>Gestão Financeira</td><td>Pensão alimentícia, despesas extras, comprovantes (Azure Blob)</td></tr>
+          <tr><td><strong>EP-05</strong></td><td>Saúde & Escola</td><td>Prontuário médico, vacinação, boletins (Fase 2)</td></tr>
+          <tr><td><strong>EP-06</strong></td><td>Ocorrências</td><td>Registro jurídico com evidências, hash SHA-256 (System.Security.Cryptography)</td></tr>
+          <tr><td><strong>EP-07</strong></td><td>Relatórios Jurídicos</td><td>PDF via QuestPDF + Azure Service Bus, hash de integridade</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── STACK ── -->
+  <section id="stack">
+    <div class="section-title"><span>⚙️</span> Stack Tecnológica</div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🖥️ Frontend</div>
+        <table>
+          <thead><tr><th>Tecnologia</th><th>Versão</th></tr></thead>
+          <tbody>
+            <tr><td>React + TypeScript</td><td><code>18.x</code></td></tr>
+            <tr><td>Vite (Build)</td><td><code>5.x</code></td></tr>
+            <tr><td>Tailwind CSS + shadcn/ui</td><td><code>latest</code></td></tr>
+            <tr><td>Zustand + React Query</td><td><code>latest</code></td></tr>
+            <tr><td>React Router</td><td><code>v6</code></td></tr>
+            <tr><td>@microsoft/signalr (Client)</td><td><code>8.x</code></td></tr>
+            <tr><td><strong>Hosting</strong></td><td>Azure Static Web Apps</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">⚡ Backend (.NET 8)</div>
+        <table>
+          <thead><tr><th>Tecnologia</th><th>Versão</th></tr></thead>
+          <tbody>
+            <tr><td><strong>.NET</strong></td><td><code>8 LTS</code></td></tr>
+            <tr><td>ASP.NET Core</td><td><code>8.x</code></td></tr>
+            <tr><td>Entity Framework Core</td><td><code>8.x</code></td></tr>
+            <tr><td>ASP.NET Core SignalR</td><td><code>8.x</code></td></tr>
+            <tr><td>MediatR (CQRS)</td><td><code>12.x</code></td></tr>
+            <tr><td>FluentValidation</td><td><code>11.x</code></td></tr>
+            <tr><td>ASP.NET Core Identity + JWT Bearer</td><td><code>8.x</code></td></tr>
+            <tr><td><strong>Arquitetura</strong></td><td>Clean Architecture + CQRS</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">☁️ Dados & Serviços Azure</div>
+        <table>
+          <thead><tr><th>Serviço Azure</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td>Azure DB for PostgreSQL Flexible Server</td><td>Banco principal (16.x)</td></tr>
+            <tr><td>Azure Cache for Redis (Standard C1)</td><td>Cache + backplane SignalR</td></tr>
+            <tr><td>Azure Blob Storage (LRS)</td><td>Mídias, evidências, PDFs</td></tr>
+            <tr><td>Azure Communication Services</td><td>Email transacional</td></tr>
+            <tr><td>Azure SignalR Service (Standard)</td><td>WebSocket gerenciado (chat)</td></tr>
+            <tr><td>Azure Service Bus (Standard)</td><td>Fila de jobs de PDF</td></tr>
+            <tr><td>Firebase FCM</td><td>Push notifications</td></tr>
+            <tr><td>QuestPDF (.NET)</td><td>Geração de PDF (sem browser)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🚀 DevOps & Observabilidade</div>
+        <table>
+          <thead><tr><th>Tecnologia</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td>Docker + docker-compose</td><td>Dev local e CI/CD</td></tr>
+            <tr><td>Azure Container Registry (ACR)</td><td>Docker image registry</td></tr>
+            <tr><td>GitHub Actions (OIDC Azure)</td><td>Pipeline CI/CD sem credenciais</td></tr>
+            <tr><td>Azure App Service (Linux P1v3)</td><td>Hosting API + blue-green slots</td></tr>
+            <tr><td>Azure Container Apps</td><td>PDF Worker Service (serverless)</td></tr>
+            <tr><td>Azure Monitor + Application Insights</td><td>APM, logs, traces distribuídos</td></tr>
+            <tr><td>Azure Key Vault (Standard)</td><td>Segredos via Managed Identity</td></tr>
+            <tr><td>Azure Front Door Standard</td><td>CDN global + WAF OWASP 3.2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MIGRATION ── -->
+  <section id="migration">
+    <div class="section-title"><span>🔄</span> Migração AWS → Azure</div>
+
+    <div class="card">
+      <div class="card-title">📊 Mapeamento Completo de Serviços</div>
+      <table>
+        <thead>
+          <tr><th>Camada</th><th>AWS (anterior)</th><th></th><th>Azure (atual)</th><th>Benefício</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Runtime</td>
+            <td class="mapping-old">Node.js 20 LTS</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">.NET 8 LTS (C#)</td>
+            <td style="font-size:12px;color:var(--text-muted)">Performance, tipagem forte, SHA-256 nativo</td>
+          </tr>
+          <tr>
+            <td>Framework</td>
+            <td class="mapping-old">NestJS 10</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">ASP.NET Core 8</td>
+            <td style="font-size:12px;color:var(--text-muted)">Clean Arch + CQRS/MediatR</td>
+          </tr>
+          <tr>
+            <td>ORM</td>
+            <td class="mapping-old">Prisma 5</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Entity Framework Core 8</td>
+            <td style="font-size:12px;color:var(--text-muted)">Interceptors para imutabilidade</td>
+          </tr>
+          <tr>
+            <td>WebSocket</td>
+            <td class="mapping-old">Socket.IO + Redis Adapter</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">SignalR + Azure SignalR Service</td>
+            <td style="font-size:12px;color:var(--text-muted)">Escala automática, PaaS gerenciado</td>
+          </tr>
+          <tr>
+            <td>Fila de Jobs</td>
+            <td class="mapping-old">BullMQ + Redis</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure Service Bus</td>
+            <td style="font-size:12px;color:var(--text-muted)">DLQ nativo, retentativas, exactly-once</td>
+          </tr>
+          <tr>
+            <td>PDF</td>
+            <td class="mapping-old">Puppeteer (headless Chrome)</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">QuestPDF (.NET Worker)</td>
+            <td style="font-size:12px;color:var(--text-muted)">Sem browser, mais leve, C# nativo</td>
+          </tr>
+          <tr>
+            <td>Hosting API</td>
+            <td class="mapping-old">EC2 t3.medium × 2</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure App Service P1v3</td>
+            <td style="font-size:12px;color:var(--text-muted)">PaaS, blue-green slots, auto-scale</td>
+          </tr>
+          <tr>
+            <td>Hosting Worker</td>
+            <td class="mapping-old">EC2 t3.small</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure Container Apps</td>
+            <td style="font-size:12px;color:var(--text-muted)">Serverless — paga por execução</td>
+          </tr>
+          <tr>
+            <td>Banco de Dados</td>
+            <td class="mapping-old">AWS RDS PostgreSQL</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure DB PostgreSQL Flexible Server</td>
+            <td style="font-size:12px;color:var(--text-muted)">PITR 35 dias, HA automático</td>
+          </tr>
+          <tr>
+            <td>Cache</td>
+            <td class="mapping-old">ElastiCache Redis</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure Cache for Redis</td>
+            <td style="font-size:12px;color:var(--text-muted)">Réplica de failover incluída (Standard)</td>
+          </tr>
+          <tr>
+            <td>File Storage</td>
+            <td class="mapping-old">AWS S3</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure Blob Storage</td>
+            <td style="font-size:12px;color:var(--text-muted)">SAS tokens = presigned URLs</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td class="mapping-old">AWS SES</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure Communication Services</td>
+            <td style="font-size:12px;color:var(--text-muted)">SDK unificado, rastreamento</td>
+          </tr>
+          <tr>
+            <td>CDN + WAF</td>
+            <td class="mapping-old">CloudFront + AWS WAF</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure Front Door Standard</td>
+            <td style="font-size:12px;color:var(--text-muted)">Solução unificada, WebSocket nativo</td>
+          </tr>
+          <tr>
+            <td>Monitoramento</td>
+            <td class="mapping-old">CloudWatch + Sentry</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure Monitor + Application Insights</td>
+            <td style="font-size:12px;color:var(--text-muted)">APM nativo, traces distribuídos</td>
+          </tr>
+          <tr>
+            <td>Segredos</td>
+            <td class="mapping-old">AWS Secrets Manager</td>
+            <td class="arrow-cell">→</td>
+            <td class="mapping-new">Azure Key Vault + Managed Identity</td>
+            <td style="font-size:12px;color:var(--text-muted)">Zero credenciais em código</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── ADRS ── -->
+  <section id="adrs">
+    <div class="section-title"><span>📋</span> Decisões Arquiteturais (ADRs)</div>
+
+    <div class="adr-card">
+      <div class="adr-id">ADR-001</div>
+      <div class="adr-title">PostgreSQL como Banco Principal (Azure Flexible Server)</div>
+      <div class="adr-body">
+        <strong>Decisão:</strong> Azure Database for PostgreSQL Flexible Server 16 como único banco relacional.<br>
+        <strong>Motivação:</strong> Row Level Security nativo, triggers para audit log, JSONB, PITR backup 35 dias, HA automático sem downtime.<br>
+        <strong>Rejeitados:</strong> Azure SQL (licença, RLS menos maduro), Cosmos DB (sem ACID completo).
+      </div>
+    </div>
+
+    <div class="adr-card" style="border-left-color:var(--azure)">
+      <div class="adr-id" style="color:var(--azure-light)">ADR-002</div>
+      <div class="adr-title">SignalR + Azure SignalR Service para Chat em Tempo Real</div>
+      <div class="adr-body">
+        <strong>Decisão:</strong> ASP.NET Core SignalR com Azure SignalR Service como backplane gerenciado.<br>
+        <strong>Motivação:</strong> Nativo no .NET, Azure SignalR Service escala horizontal automaticamente — elimina necessidade de Redis Pub/Sub dedicado para WebSocket.<br>
+        <strong>Rejeitados:</strong> Socket.IO (não nativo em .NET), SSE (unidirecional).
+      </div>
+    </div>
+
+    <div class="adr-card" style="border-left-color:var(--danger)">
+      <div class="adr-id" style="color:#FCA5A5">ADR-003</div>
+      <div class="adr-title">Imutabilidade via INSERT-Only (Dupla Camada)</div>
+      <div class="adr-body">
+        <strong>Decisão:</strong> Trigger PostgreSQL + EF Core <code>SaveChangesInterceptor</code> marcando entidades como <code>[Immutable]</code>.<br>
+        <strong>Motivação:</strong> Dupla camada garante imutabilidade comprovável em auditoria judicial mesmo que uma camada seja contornada.<br>
+        <strong>Implementação:</strong> <code>CREATE RULE no_update_messages AS ON UPDATE TO messages DO INSTEAD NOTHING;</code>
+      </div>
+    </div>
+
+    <div class="adr-card" style="border-left-color:var(--purple)">
+      <div class="adr-id" style="color:#C4B5FD">ADR-004</div>
+      <div class="adr-title">Hash SHA-256 via System.Security.Cryptography</div>
+      <div class="adr-body">
+        <strong>Decisão:</strong> <code>SHA256.HashData()</code> nativo do .NET 8 — sem dependência externa.<br>
+        <strong>Motivação:</strong> Hash simples, verificável por qualquer ferramenta, sem dependência de CA. API thread-safe e otimizada no .NET 8.<br>
+        <strong>Implementação:</strong> <code>Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(input)))</code>
+      </div>
+    </div>
+
+    <div class="adr-card" style="border-left-color:var(--success)">
+      <div class="adr-id" style="color:#6EE7B7">ADR-005</div>
+      <div class="adr-title">PDF com QuestPDF + Azure Service Bus</div>
+      <div class="adr-body">
+        <strong>Decisão:</strong> QuestPDF em .NET 8 Worker Service consumindo Azure Service Bus (substituí Puppeteer + BullMQ).<br>
+        <strong>Motivação:</strong> QuestPDF é biblioteca .NET pura — sem Chrome headless, menor footprint, mais rápido. Service Bus provê DLQ, retentativas e exactly-once nativos.<br>
+        <strong>Rejeitados:</strong> PuppeteerSharp (dependência de Chrome, pesado), iTextSharp (licença comercial cara).
+      </div>
+    </div>
+
+    <div class="adr-card" style="border-left-color:var(--azure)">
+      <div class="adr-id" style="color:var(--azure-light)">ADR-006</div>
+      <div class="adr-title">Azure App Service P1v3 com Deployment Slots</div>
+      <div class="adr-body">
+        <strong>Decisão:</strong> Azure App Service (Linux, P1v3) com slot de staging para blue-green deployment.<br>
+        <strong>Motivação:</strong> PaaS elimina overhead de gestão de SO/VMs. Slots permitem deploy sem downtime — staging → production swap em segundos. Auto-scaling baseado em métricas do Application Insights.<br>
+        <strong>Rejeitados:</strong> Azure Functions (cold start incompatível com SignalR persistente).
+      </div>
+    </div>
+
+    <div class="adr-card" style="border-left-color:var(--dotnet)">
+      <div class="adr-id" style="color:var(--dotnet-light)">ADR-007</div>
+      <div class="adr-title">Azure Front Door Standard como CDN + WAF Unificado</div>
+      <div class="adr-body">
+        <strong>Decisão:</strong> Azure Front Door Standard substituindo CloudFront + AWS WAF separados.<br>
+        <strong>Motivação:</strong> Solução unificada CDN + WAF (OWASP 3.2 ruleset) + Load Balancer. Suporte nativo a WebSocket — elimina problema de upgrades HTTP→WS. TLS automático.<br>
+        <strong>Rejeitados:</strong> Azure CDN + Application Gateway separados (maior custo e complexidade de configuração).
+      </div>
+    </div>
+  </section>
+
+  <!-- ── C4 L1 ── -->
+  <section id="c4-l1">
+    <div class="section-title"><span>🌐</span> C4 Level 1 — Contexto do Sistema</div>
+
+    <div class="diagram-box">
+      <div class="diagram-label">🌐 Visão de Contexto — atores e sistemas externos</div>
+      <div class="mermaid">
+graph TB
+    subgraph Usuarios["👥 Usuários"]
+        U1["👤 Responsável 1<br/>Pai/mãe com guarda"]
+        U2["👤 Responsável 2<br/>Co-guardião"]
+        U3["⚖️ Advogado de Família<br/>Read-only: relatórios"]
+        U4["🧠 Psicólogo / Mediador<br/>Acesso controlado"]
+        U5["🛠️ Administrador<br/>Sem dados sensíveis"]
+    end
+
+    G360["🛡️ GUARDA360°<br/>ASP.NET Core 8 + React 18<br/>Azure — Brazil South"]
+
+    subgraph Externos["☁️ Sistemas Externos"]
+        ACS["📧 Azure Communication Services<br/>E-mail transacional"]
+        BLOB["🗂️ Azure Blob Storage<br/>Arquivos e PDFs (SAS tokens)"]
+        FCM["🔔 Firebase FCM<br/>Push notifications"]
+        PDF["📄 QuestPDF Worker Service<br/>Geração de PDF (.NET Worker)"]
+    end
+
+    U1 -->|"HTTPS / WSS SignalR"| G360
+    U2 -->|"HTTPS / WSS SignalR"| G360
+    U3 -->|"HTTPS"| G360
+    U4 -->|"HTTPS"| G360
+    U5 -->|"HTTPS"| G360
+
+    G360 -->|"ACS SDK"| ACS
+    G360 -->|"Azure Storage SDK + SAS"| BLOB
+    G360 -->|"FCM REST v1"| FCM
+    G360 -->|"Azure Service Bus"| PDF
+
+    style G360 fill:#0078D4,stroke:#50B0F0,color:#fff
+    style Usuarios fill:#1E293B,stroke:#334155,color:#E2E8F0
+    style Externos fill:#1E293B,stroke:#334155,color:#E2E8F0
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">👥 Atores e Sistemas Externos</div>
+      <table>
+        <thead><tr><th>Ator / Sistema</th><th>Tipo</th><th>Interação</th></tr></thead>
+        <tbody>
+          <tr><td>Responsável 1</td><td>Usuário Primário</td><td>Todas as funcionalidades — calendário, chat (SignalR), finanças, ocorrências, relatórios</td></tr>
+          <tr><td>Responsável 2</td><td>Usuário Primário</td><td>Mesmas funcionalidades com permissões configuráveis (RBAC Policy)</td></tr>
+          <tr><td>Advogado de Família</td><td>Usuário Secundário</td><td>Read-only: consulta relatórios e ocorrências de clientes</td></tr>
+          <tr><td>Psicólogo / Mediador</td><td>Usuário Secundário</td><td>Acesso controlado a chat e ocorrências autorizadas</td></tr>
+          <tr><td>Azure Communication Services</td><td>Azure PaaS</td><td>Emails transacionais — verificação, notificações, entrega de relatórios</td></tr>
+          <tr><td>Azure Blob Storage</td><td>Azure PaaS</td><td>Fotos, comprovantes, áudios, PDFs — SAS tokens para acesso seguro</td></tr>
+          <tr><td>Firebase FCM</td><td>Google SaaS</td><td>Push notifications para web e mobile (futuro)</td></tr>
+          <tr><td>QuestPDF Worker</td><td>Internal .NET Worker</td><td>Renderização de PDFs jurídicos — consome Azure Service Bus</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── C4 L2 ── -->
+  <section id="c4-l2">
+    <div class="section-title"><span>📦</span> C4 Level 2 — Containers</div>
+
+    <div class="diagram-box">
+      <div class="diagram-label">📦 Visão de Containers — decomposição técnica do sistema (.NET 8 + Azure)</div>
+      <div class="mermaid">
+graph TB
+    subgraph FE["🖥️ Frontend"]
+        SPA["⚛️ React SPA<br/>React 18 + TypeScript + Vite<br/>Tailwind + shadcn/ui<br/>Azure Static Web Apps"]
+    end
+
+    subgraph BE["⚡ Backend (.NET 8)"]
+        API["🔷 ASP.NET Core 8 API<br/>.NET 8 LTS + C# + EF Core 8<br/>REST + SignalR Hub<br/>Azure App Service P1v3"]
+        WORKER["📄 .NET Worker Service<br/>QuestPDF + Azure Service Bus SDK<br/>Geração assíncrona de PDF<br/>Azure Container Apps"]
+    end
+
+    subgraph MSGBUS["📨 Mensageria"]
+        SB["📨 Azure Service Bus<br/>Queue: pdf-jobs<br/>DLQ + retentativas"]
+        SR["⚡ Azure SignalR Service<br/>Standard 1 Unit<br/>1K conexões simultâneas"]
+    end
+
+    subgraph DATA["🗄️ Dados"]
+        PG["🐘 PostgreSQL 16<br/>Azure Flexible Server B2ms<br/>INSERT-only + RLS<br/>PITR 35 dias"]
+        RD["⚡ Azure Cache for Redis<br/>Standard C1 · 1 GB<br/>Cache sessões + SignalR backplane"]
+    end
+
+    subgraph STORAGE["☁️ Storage"]
+        BLOB["🗂️ Azure Blob Storage<br/>LRS — Containers privados<br/>SAS tokens com expiração"]
+    end
+
+    ACS["📧 Azure Communication Services"]
+    FCM["🔔 Firebase FCM"]
+
+    U(("👤 Usuários")) --> SPA
+    SPA -->|"HTTPS / WSS"| API
+    API -->|"EF Core"| PG
+    API -->|"StackExchange.Redis"| RD
+    API -->|"Azure Storage SDK"| BLOB
+    API -->|"ACS SDK"| ACS
+    API -->|"FCM REST"| FCM
+    API -->|"SignalR Hub"| SR
+    API -->|"Service Bus SDK"| SB
+    SB -->|"Consome jobs"| WORKER
+    WORKER -->|"EF Core read-only"| PG
+    WORKER -->|"Upload PDF"| BLOB
+    WORKER -->|"Notificação"| ACS
+
+    style API fill:#512BD4,stroke:#9B6CF0,color:#fff
+    style SPA fill:#0891B2,stroke:#06B6D4,color:#fff
+    style PG fill:#92400E,stroke:#F59E0B,color:#fff
+    style RD fill:#991B1B,stroke:#EF4444,color:#fff
+    style WORKER fill:#065F46,stroke:#10B981,color:#fff
+    style BLOB fill:#0F5C44,stroke:#10B981,color:#fff
+    style SR fill:#0078D4,stroke:#50B0F0,color:#fff
+    style SB fill:#0078D4,stroke:#50B0F0,color:#fff
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📦 Descrição dos Containers</div>
+      <table>
+        <thead><tr><th>Container</th><th>Tecnologia</th><th>Hospedagem Azure</th><th>Responsabilidade</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>React SPA</strong></td>
+            <td><code>React 18 + Vite + Tailwind</code></td>
+            <td>Azure Static Web Apps (CDN global)</td>
+            <td>Interface completa — dashboard, calendário, chat, finanças, ocorrências, relatórios</td>
+          </tr>
+          <tr>
+            <td><strong>ASP.NET Core API</strong></td>
+            <td><code>.NET 8 + EF Core 8 + SignalR</code></td>
+            <td>App Service P1v3 (Linux, 2 instâncias + staging slot)</td>
+            <td>Toda lógica de negócio — REST + SignalR WebSocket — autenticação RBAC, módulos de domínio</td>
+          </tr>
+          <tr>
+            <td><strong>.NET Worker Service</strong></td>
+            <td><code>QuestPDF + Azure.Messaging.ServiceBus</code></td>
+            <td>Azure Container Apps (serverless)</td>
+            <td>Processa jobs de geração de PDF assincronamente via Azure Service Bus</td>
+          </tr>
+          <tr>
+            <td><strong>PostgreSQL Flexible Server</strong></td>
+            <td><code>PostgreSQL 16</code></td>
+            <td>Azure DB for PostgreSQL Flexible Server (B2ms)</td>
+            <td>Persistência principal — INSERT-only via triggers + EF Core Interceptors, RLS, PITR 35 dias</td>
+          </tr>
+          <tr>
+            <td><strong>Azure Cache for Redis</strong></td>
+            <td><code>Redis 7 (Standard C1)</code></td>
+            <td>Azure Cache for Redis (1 GB, réplica failover)</td>
+            <td>Cache JWT/refresh tokens, backplane do Azure SignalR Service, cache de queries</td>
+          </tr>
+          <tr>
+            <td><strong>Azure Blob Storage</strong></td>
+            <td><code>Blob Storage LRS</code></td>
+            <td>Azure Blob (3 containers)</td>
+            <td>Mídias/evidências, PDFs gerados — SAS tokens com expiração configurável</td>
+          </tr>
+          <tr>
+            <td><strong>Azure Service Bus</strong></td>
+            <td><code>Standard Tier — Queue pdf-jobs</code></td>
+            <td>Azure Service Bus</td>
+            <td>Fila de jobs PDF — DLQ nativo, retentativas automáticas (5×), exactly-once delivery</td>
+          </tr>
+          <tr>
+            <td><strong>Azure SignalR Service</strong></td>
+            <td><code>Standard Tier — 1 Unit</code></td>
+            <td>Azure SignalR Service</td>
+            <td>Backplane gerenciado para chat em tempo real — 1.000 conexões simultâneas, escala automática</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── C4 L3 ── -->
+  <section id="c4-l3">
+    <div class="section-title"><span>🔧</span> C4 Level 3 — Componentes (ASP.NET Core API)</div>
+
+    <div class="diagram-box">
+      <div class="diagram-label">🔷 Módulos ASP.NET Core — Clean Architecture + CQRS (MediatR)</div>
+      <div class="mermaid">
+graph TB
+    subgraph DOTNET["🔷 ASP.NET Core API (.NET 8)"]
+        AUTH["🔑 Auth Module<br/>ASP.NET Core Identity + TOTP<br/>JWT Bearer + Refresh Rotation"]
+        USERS["👤 Users Module<br/>EF Core + RBAC Policy<br/>Perfis + Permissões"]
+        RBAC["🛡️ RBAC Policy Handler<br/>IAuthorizationHandler<br/>Policy-based Global"]
+        CHILDREN["👶 Children Module<br/>EF Core<br/>Filhos + Convites"]
+        CALENDAR["📅 Calendar Module<br/>EF Core<br/>Eventos + Check-in"]
+        CHAT["💬 Chat SignalR Hub<br/>ASP.NET Core SignalR<br/>Azure SignalR Service"]
+        FIN["💰 Financial Module<br/>EF Core + Blob Storage<br/>Pensão + Despesas"]
+        INC["⚠️ Incidents Module<br/>EF Core + Blob + SHA256<br/>Ocorrências + Integridade"]
+        REP["📊 Reports Module<br/>Service Bus SDK<br/>Timeline + Enfileira PDF"]
+        NOTIF["🔔 Notifications Service<br/>FCM + ACS Email<br/>Push + Email"]
+        STORAGE["🗂️ Storage Module<br/>Azure Blob SDK<br/>SAS Tokens + Upload"]
+        PIPE["⚙️ MediatR Pipeline<br/>Validation + Logging<br/>Audit Behaviors"]
+    end
+
+    PG[("🐘 PostgreSQL")]
+    RD[("⚡ Azure Cache for Redis")]
+    SR["⚡ Azure SignalR Service"]
+    BLOB["🗂️ Azure Blob"]
+    SB["📨 Azure Service Bus"]
+    FCM["🔔 Firebase FCM"]
+    ACS["📧 Azure Comm. Services"]
+
+    AUTH --> PG
+    AUTH --> RD
+    USERS --> PG
+    CHILDREN --> PG
+    CHILDREN --> ACS
+    CALENDAR --> PG
+    CHAT --> SR
+    CHAT --> PG
+    CHAT --> STORAGE
+    FIN --> PG
+    FIN --> STORAGE
+    INC --> PG
+    INC --> STORAGE
+    REP --> PG
+    REP --> SB
+    NOTIF --> FCM
+    NOTIF --> ACS
+    STORAGE --> BLOB
+    RBAC --> USERS
+    PIPE --> PG
+
+    style DOTNET fill:#1E293B,stroke:#512BD4
+    style AUTH fill:#512BD4,stroke:#9B6CF0,color:#fff
+    style RBAC fill:#5B21B6,stroke:#8B5CF6,color:#fff
+    style CHAT fill:#0078D4,stroke:#50B0F0,color:#fff
+    style INC fill:#7F1D1D,stroke:#EF4444,color:#fff
+    style PIPE fill:#1D4ED8,stroke:#3B82F6,color:#fff
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔧 Módulos e Endpoints — ASP.NET Core Controllers</div>
+      <div class="module-grid">
+        <div class="module-pill">
+          <div class="module-pill-name">🔑 Auth</div>
+          <div class="module-pill-tech">ASP.NET Core Identity + TOTP</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            POST /auth/register<br>POST /auth/login<br>POST /auth/refresh<br>POST /auth/2fa/verify
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">👤 Users</div>
+          <div class="module-pill-tech">ASP.NET Core + EF Core</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            GET /users/me<br>PUT /users/me<br>GET /users/:id/profile
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">👶 Children</div>
+          <div class="module-pill-tech">ASP.NET Core + EF Core</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            POST /children<br>GET /children<br>POST /invite<br>POST /invite/accept
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">📅 Calendar</div>
+          <div class="module-pill-tech">ASP.NET Core + EF Core</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            GET/POST /calendar/events<br>POST /attendance/checkin<br>POST /attendance/checkout
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">💬 Chat Hub</div>
+          <div class="module-pill-tech">ASP.NET Core SignalR</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            WSS /chatHub<br>InvokeAsync("SendMessage")<br>GET /messages
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">💰 Financial</div>
+          <div class="module-pill-tech">ASP.NET Core + Azure Blob</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            POST/GET /alimony<br>POST /expenses<br>POST /expenses/:id/approve
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">⚠️ Incidents</div>
+          <div class="module-pill-tech">EF Core + Blob + SHA256</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            POST/GET /incidents<br>POST /incidents/:id/evidence
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">📊 Reports</div>
+          <div class="module-pill-tech">Service Bus + QuestPDF</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            POST /reports/generate<br>GET /reports/:id/status<br>GET /timeline
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">🗂️ Storage</div>
+          <div class="module-pill-tech">Azure Blob SDK</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            POST /storage/upload<br>GET /storage/sas-token
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">🔔 Notifications</div>
+          <div class="module-pill-tech">FCM + ACS Email</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            (INotificationService interno)<br>Push + Email transacional
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">🛡️ RBAC Policy</div>
+          <div class="module-pill-tech">IAuthorizationHandler Global</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            Policy-based auth em<br>todos os endpoints<br>via middleware
+          </div>
+        </div>
+        <div class="module-pill">
+          <div class="module-pill-name">⚙️ MediatR Pipeline</div>
+          <div class="module-pill-tech">Behaviors CQRS</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-dim)">
+            ValidationBehavior<br>LoggingBehavior<br>AuditBehavior
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📁 Estrutura Clean Architecture</div>
+      <pre><code>src/
+  Guarda360.Domain/          ← Entidades, Value Objects, Domain Events, Interfaces
+  Guarda360.Application/     ← Commands, Queries, Handlers (MediatR), DTOs, Validators (FluentValidation)
+  Guarda360.Infrastructure/  ← EF Core DbContext, Repositories, Azure SDK clients, Identity
+  Guarda360.API/             ← Controllers, SignalR Hubs, Middlewares, Program.cs
+  Guarda360.Worker/          ← .NET Worker Service — PDF Worker (Azure Container Apps)
+tests/
+  Guarda360.Domain.Tests/
+  Guarda360.Application.Tests/
+  Guarda360.Integration.Tests/</code></pre>
+    </div>
+  </section>
+
+  <!-- ── ER DIAGRAM ── -->
+  <section id="er">
+    <div class="section-title"><span>🗄️</span> Diagrama Entidade-Relacionamento</div>
+
+    <div class="diagram-box" style="overflow-x:auto">
+      <div class="diagram-label">🗄️ Modelo de dados — Guarda360° v2.0 (EF Core 8 + PostgreSQL Flexible Server)</div>
+      <div class="mermaid">
+erDiagram
+    USERS {
+        uuid id PK
+        string full_name
+        string cpf_hash
+        string email UK
+        string password_hash
+        boolean email_verified
+        timestamp created_at
+        boolean is_active
+    }
+
+    CHILDREN {
+        uuid id PK
+        string full_name
+        date birth_date
+        string school_name
+        string photo_url
+        timestamp created_at
+    }
+
+    PARENT_CHILD {
+        uuid id PK
+        uuid user_id FK
+        uuid child_id FK
+        enum role
+        enum custody_type
+        boolean is_active
+    }
+
+    CALENDAR_EVENTS {
+        uuid id PK
+        uuid child_id FK
+        uuid created_by FK
+        enum type
+        uuid responsible_user_id FK
+        timestamp start_at
+        timestamp end_at
+        boolean is_recurring
+    }
+
+    ATTENDANCE_RECORDS {
+        uuid id PK
+        uuid calendar_event_id FK
+        uuid recorded_by FK
+        enum status
+        timestamp actual_time
+        integer delay_minutes
+        timestamp created_at
+    }
+
+    MESSAGES {
+        uuid id PK
+        uuid child_id FK
+        uuid sender_id FK
+        enum type
+        text content
+        string attachment_url
+        boolean is_legally_relevant
+        timestamp created_at
+    }
+
+    INCIDENTS {
+        uuid id PK
+        uuid child_id FK
+        uuid reported_by FK
+        enum type
+        enum severity
+        text narrative
+        string integrity_hash
+        timestamp created_at
+    }
+
+    INCIDENT_EVIDENCES {
+        uuid id PK
+        uuid incident_id FK
+        string file_url
+        string file_hash
+        string mime_type
+        timestamp uploaded_at
+    }
+
+    EXPENSES {
+        uuid id PK
+        uuid child_id FK
+        uuid created_by FK
+        enum category
+        decimal amount
+        enum status
+        timestamp created_at
+    }
+
+    ALIMONY_CONFIGS {
+        uuid id PK
+        uuid child_id FK
+        uuid payer_id FK
+        uuid receiver_id FK
+        decimal amount
+        integer due_day
+        boolean is_active
+    }
+
+    ALIMONY_PAYMENTS {
+        uuid id PK
+        uuid alimony_config_id FK
+        decimal amount_paid
+        date payment_date
+        enum status
+    }
+
+    REPORTS {
+        uuid id PK
+        uuid child_id FK
+        uuid requested_by FK
+        date period_from
+        date period_to
+        enum status
+        string pdf_url
+        string pdf_hash
+    }
+
+    AUDIT_LOG {
+        uuid id PK
+        uuid user_id FK
+        string action
+        string entity_type
+        jsonb metadata
+        timestamp created_at
+    }
+
+    USERS ||--o{ PARENT_CHILD : "responsável"
+    CHILDREN ||--o{ PARENT_CHILD : "tem responsáveis"
+    CHILDREN ||--o{ CALENDAR_EVENTS : "tem eventos"
+    CALENDAR_EVENTS ||--o{ ATTENDANCE_RECORDS : "tem registros"
+    CHILDREN ||--o{ MESSAGES : "tem mensagens"
+    CHILDREN ||--o{ INCIDENTS : "tem ocorrências"
+    INCIDENTS ||--o{ INCIDENT_EVIDENCES : "tem evidências"
+    CHILDREN ||--o{ EXPENSES : "tem despesas"
+    CHILDREN ||--o{ ALIMONY_CONFIGS : "tem pensão"
+    ALIMONY_CONFIGS ||--o{ ALIMONY_PAYMENTS : "tem pagamentos"
+    CHILDREN ||--o{ REPORTS : "tem relatórios"
+    USERS ||--o{ AUDIT_LOG : "gera logs"
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🔒 Tabelas INSERT-ONLY (Dupla Camada)</div>
+        <table>
+          <thead><tr><th>Tabela</th><th>Proteção</th></tr></thead>
+          <tbody>
+            <tr><td><code>attendance_records</code> <span class="immutable-badge">INSERT-ONLY</span></td><td>Trigger SQL + <code>[Immutable]</code> EF Core</td></tr>
+            <tr><td><code>messages</code> <span class="immutable-badge">INSERT-ONLY</span></td><td>Trigger SQL + <code>[Immutable]</code> EF Core</td></tr>
+            <tr><td><code>incidents</code> <span class="immutable-badge">INSERT-ONLY</span></td><td>Trigger SQL + <code>[Immutable]</code> EF Core</td></tr>
+            <tr><td><code>incident_evidences</code> <span class="immutable-badge">INSERT-ONLY</span></td><td>Trigger SQL + <code>[Immutable]</code> EF Core</td></tr>
+            <tr><td><code>audit_log</code> <span class="immutable-badge">INSERT-ONLY</span></td><td>Trigger SQL + <code>[Immutable]</code> EF Core</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔑 Índices Críticos de Performance</div>
+        <pre><code>CREATE INDEX idx_messages_child_created
+  ON messages(child_id, created_at DESC);
+
+CREATE INDEX idx_attendance_event
+  ON attendance_records(calendar_event_id, created_at);
+
+CREATE INDEX idx_incidents_child_severity
+  ON incidents(child_id, severity, created_at DESC);
+
+CREATE INDEX idx_expenses_child_status
+  ON expenses(child_id, status, created_at DESC);</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INFRA ── -->
+  <section id="infra">
+    <div class="section-title"><span>☁️</span> Infraestrutura Azure</div>
+
+    <div class="diagram-box">
+      <div class="diagram-label">☁️ Microsoft Azure — Brazil South (São Paulo) — MVP</div>
+      <div class="mermaid">
+graph TB
+    subgraph Browsers["👤 Usuários"]
+        B1["🌐 Responsável 1"]
+        B2["🌐 Responsável 2"]
+        B3["⚖️ Advogado"]
+    end
+
+    subgraph AZURE["☁️ Azure — Brazil South"]
+        subgraph EDGE["Edge & CDN"]
+            AFD["🌍 Azure Front Door Standard<br/>CDN Global + WAF OWASP 3.2<br/>WebSocket pass-through"]
+        end
+
+        subgraph STATIC["Static Hosting"]
+            SWA["📦 Azure Static Web Apps<br/>React SPA — CDN global<br/>Deploy via GitHub Actions OIDC"]
+        end
+
+        subgraph BLOB_CONTAINERS["Azure Blob Storage"]
+            BLOB_MEDIA["🖼️ guarda360-media<br/>Mídias e evidências<br/>SAS tokens"]
+            BLOB_PDF["📄 guarda360-reports<br/>PDFs com hash SHA-256<br/>Lifecycle tier frio 90d"]
+        end
+
+        subgraph COMPUTE["Compute"]
+            APP_SVC["🔷 Azure App Service P1v3<br/>ASP.NET Core 8 API — Linux<br/>2 instâncias Auto-scale<br/>Slot staging blue-green"]
+            CONT_APP["📄 Azure Container Apps<br/>.NET 8 Worker Service<br/>QuestPDF — Serverless"]
+        end
+
+        subgraph MSGBUS["Mensageria & Real-time"]
+            SIGNALR_SVC["⚡ Azure SignalR Service<br/>Standard 1 Unit<br/>1K conexões simultâneas"]
+            SVC_BUS["📨 Azure Service Bus<br/>Standard — Queue pdf-jobs<br/>DLQ + retentativas 5×"]
+        end
+
+        subgraph DATA["Dados"]
+            POSTGRES["🐘 Azure DB for PostgreSQL<br/>Flexible Server B2ms<br/>PITR 35 dias"]
+            REDIS["⚡ Azure Cache for Redis<br/>Standard C1 — 1 GB<br/>Backplane SignalR + cache"]
+        end
+
+        subgraph SECURITY["Segurança"]
+            KV["🔑 Azure Key Vault<br/>Standard — segredos e certs<br/>Managed Identity (zero creds)"]
+        end
+
+        subgraph OBS["Observabilidade"]
+            AI["📊 Application Insights<br/>APM + traces distribuídos<br/>Dependency tracking"]
+            LA["📋 Log Analytics Workspace<br/>Logs centralizados + KQL<br/>Alertas e Dashboards"]
+        end
+    end
+
+    subgraph EXT["Externos"]
+        ACS_E["📧 Azure Communication Services<br/>Email transacional"]
+        FCM_E["🔔 Firebase FCM"]
+        GH["🚀 GitHub Actions<br/>OIDC Azure — sem credenciais"]
+    end
+
+    B1 & B2 & B3 --> AFD
+    AFD --> SWA
+    AFD --> APP_SVC
+    APP_SVC --> POSTGRES
+    APP_SVC --> REDIS
+    APP_SVC --> BLOB_MEDIA
+    APP_SVC --> SIGNALR_SVC
+    APP_SVC --> SVC_BUS
+    APP_SVC --> ACS_E
+    APP_SVC --> FCM_E
+    SVC_BUS --> CONT_APP
+    CONT_APP --> POSTGRES
+    CONT_APP --> BLOB_PDF
+    CONT_APP --> ACS_E
+    APP_SVC --> AI
+    CONT_APP --> AI
+    AI --> LA
+    KV --> APP_SVC
+    KV --> CONT_APP
+    GH --> SWA
+    GH --> APP_SVC
+
+    style AZURE fill:#1E293B,stroke:#0078D4
+    style APP_SVC fill:#512BD4,stroke:#9B6CF0,color:#fff
+    style POSTGRES fill:#92400E,stroke:#F59E0B,color:#fff
+    style REDIS fill:#991B1B,stroke:#EF4444,color:#fff
+    style CONT_APP fill:#065F46,stroke:#10B981,color:#fff
+    style SIGNALR_SVC fill:#0078D4,stroke:#50B0F0,color:#fff
+    style SVC_BUS fill:#0078D4,stroke:#50B0F0,color:#fff
+    style AFD fill:#0078D4,stroke:#50B0F0,color:#fff
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔒 Configuração de Rede — VNet + Private Endpoints</div>
+      <table>
+        <thead><tr><th>Componente</th><th>Inbound</th><th>Outbound</th><th>Acesso</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Azure Front Door</strong></td><td>0.0.0.0/0 :443</td><td>App Service :443, Static Web Apps</td><td>Público</td></tr>
+          <tr><td><strong>App Service</strong></td><td>Front Door :443</td><td>PostgreSQL, Redis, Blob, SignalR, Service Bus</td><td>VNet Integration</td></tr>
+          <tr><td><strong>Container Apps</strong></td><td>Service Bus (pull)</td><td>PostgreSQL, Blob, ACS Email</td><td>VNet Integration</td></tr>
+          <tr><td><strong>PostgreSQL Flexible Server</strong></td><td>App Service + Container Apps</td><td>—</td><td>Private Endpoint</td></tr>
+          <tr><td><strong>Azure Cache for Redis</strong></td><td>App Service</td><td>—</td><td>Private Endpoint</td></tr>
+          <tr><td><strong>Azure Blob Storage</strong></td><td>App Service + Container Apps</td><td>—</td><td>Private Endpoint</td></tr>
+          <tr><td><strong>Azure Service Bus</strong></td><td>App Service (send) + Container Apps (receive)</td><td>—</td><td>Private Endpoint</td></tr>
+          <tr><td><strong>Azure SignalR Service</strong></td><td>App Service + Clients via Front Door</td><td>—</td><td>Gerenciado</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🚀 CI/CD Pipeline — GitHub Actions + Azure OIDC (sem credenciais)</div>
+      <pre><code>Trigger: push to main branch
+
+Jobs:
+  1. test:
+     - dotnet test (unit + integration)
+     - npm test (frontend)
+
+  2. build-frontend:
+     - npm run build
+     - Deploy: Azure Static Web Apps Action (OIDC)
+
+  3. build-backend:
+     - dotnet publish -c Release
+     - docker build -t guarda360-api .
+     - docker push guarda360.azurecr.io (ACR via OIDC)
+     - az webapp deploy --slot staging
+     - az webapp deployment slot swap (staging → production)
+
+  4. build-worker:
+     - dotnet publish -c Release
+     - docker build -t guarda360-worker .
+     - docker push ACR
+     - az containerapp update --image guarda360-worker:sha-{commit}
+
+  5. migrate:
+     - dotnet ef database update (via Azure CLI task no slot staging)</code></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔑 Azure Key Vault — Segredos Gerenciados (Managed Identity)</div>
+      <table>
+        <thead><tr><th>Segredo</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><code>ConnectionStrings--DefaultConnection</code></td><td>PostgreSQL connection string</td></tr>
+          <tr><td><code>ConnectionStrings--Redis</code></td><td>Azure Cache for Redis connection string</td></tr>
+          <tr><td><code>AzureSignalR--ConnectionString</code></td><td>Azure SignalR Service connection string</td></tr>
+          <tr><td><code>AzureServiceBus--ConnectionString</code></td><td>Azure Service Bus connection string</td></tr>
+          <tr><td><code>AzureStorage--ConnectionString</code></td><td>Azure Blob Storage connection string</td></tr>
+          <tr><td><code>AzureCommunicationServices--ConnectionString</code></td><td>ACS Email connection string</td></tr>
+          <tr><td><code>JwtSettings--Secret</code></td><td>Chave HMAC-SHA256 para JWT (256 bits)</td></tr>
+          <tr><td><code>Firebase--ServiceAccountJson</code></td><td>JSON credenciais Firebase Admin SDK</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── FLOWS ── -->
+  <section id="flows">
+    <div class="section-title"><span>🔄</span> Fluxos de Dados</div>
+
+    <!-- FLOW 1: CHAT SignalR -->
+    <div class="diagram-box">
+      <div class="diagram-label">💬 Fluxo 1 — Envio de Mensagem no Chat (ASP.NET Core SignalR)</div>
+      <div class="mermaid">
+sequenceDiagram
+    participant C1 as 👤 Responsável 1
+    participant HUB as 🔷 ASP.NET Core SignalR Hub
+    participant SR as ⚡ Azure SignalR Service
+    participant DB as 🐘 PostgreSQL (EF Core)
+    participant C2 as 👤 Responsável 2
+    participant FCM as 🔔 Firebase FCM
+
+    C1->>HUB: InvokeAsync("SendMessage", {childId, content})
+    HUB->>HUB: Valida JWT Bearer + RBAC Policy
+    HUB->>DB: INSERT INTO messages via EF Core (INSERT-ONLY Interceptor)
+    DB-->>HUB: messageId + createdAt (DateTime.UtcNow servidor)
+    HUB->>SR: Clients.Group(childId).SendAsync("NewMessage", dto)
+    SR-->>C1: ReceiveConfirmation("MessageDelivered", messageId)
+    SR-->>C2: ReceiveMessage("NewMessage", {content, createdAt})
+    Note over HUB,FCM: Se C2 offline (não conectado ao SignalR)
+    HUB->>FCM: HttpClient.PostAsync(FCM v1, {token: C2, body: "Nova mensagem"})
+      </div>
+    </div>
+
+    <!-- FLOW 2: INCIDENT -->
+    <div class="diagram-box">
+      <div class="diagram-label">⚠️ Fluxo 2 — Registro de Ocorrência com Hash SHA-256 (System.Security.Cryptography)</div>
+      <div class="mermaid">
+sequenceDiagram
+    participant C1 as 👤 Responsável 1
+    participant API as 🔷 ASP.NET Core API
+    participant BLOB as 🗂️ Azure Blob Storage
+    participant DB as 🐘 PostgreSQL (EF Core)
+
+    C1->>API: POST /incidents {childId, type, severity, narrative}
+    API->>API: Valida JWT Bearer + Policy("CanReportIncident")
+    API->>API: partialHash = SHA256.HashData(timestamp + narrative + userId)
+    API->>DB: INSERT incidents (narrative + partialHash) via EF Core
+    Note over API: Aguarda evidências
+
+    C1->>API: POST /incidents/:id/evidence (multipart/form-data)
+    API->>BLOB: BlobClient.UploadAsync(stream) → URL + ETag/MD5
+    API->>DB: INSERT incident_evidences (blobUrl, fileHash, mime, size)
+    API->>API: finalHash = SHA256(narrative + fileHashes + serverTimestamp)
+    API->>DB: UPDATE incidents SET integrity_hash = finalHash
+    Note over DB: EF Core SaveChangesInterceptor bloqueia UPDATEs futuros
+    API-->>C1: 201 {incidentId, integrityHash, createdAt}
+      </div>
+    </div>
+
+    <!-- FLOW 3: PDF -->
+    <div class="diagram-box">
+      <div class="diagram-label">📄 Fluxo 3 — Geração de Relatório PDF (Azure Service Bus + QuestPDF)</div>
+      <div class="mermaid">
+sequenceDiagram
+    participant C1 as 👤 Responsável
+    participant API as 🔷 ASP.NET Core API
+    participant SB as 📨 Azure Service Bus
+    participant WORKER as 📄 .NET Worker Service
+    participant DB as 🐘 PostgreSQL
+    participant BLOB as 🗂️ Azure Blob
+    participant ACS as 📧 Azure Comm. Services
+
+    C1->>API: POST /reports/generate {childId, period, modules}
+    API->>DB: INSERT reports {status: QUEUED} via EF Core
+    API->>SB: ServiceBusClient.SendMessageAsync({reportId, ...})
+    API-->>C1: 202 Accepted {reportId, status: "QUEUED"}
+
+    Note over WORKER: Worker processa mensagem da fila
+    WORKER->>SB: ServiceBusProcessor.ProcessMessageAsync()
+    WORKER->>DB: UPDATE reports SET status = PROCESSING
+    WORKER->>DB: SELECT dados do período (EF Core read-only)
+    WORKER->>WORKER: Mapeia para modelos QuestPDF
+    WORKER->>WORKER: QuestPDF.Document.GeneratePdf() → MemoryStream
+    WORKER->>WORKER: pdfHash = SHA256.HashData(pdfBuffer)
+    WORKER->>BLOB: BlobClient.UploadAsync(pdfBuffer, container: reports)
+    WORKER->>DB: UPDATE reports SET status=DONE, pdfUrl, pdfHash
+    WORKER->>ACS: EmailClient.SendAsync(link SAS 24h)
+    WORKER->>SB: CompleteMessageAsync() — ack remove da fila
+
+    C1->>API: GET /reports/:id/status (polling)
+    API-->>C1: {status: "DONE", pdfSasUrl, pdfHash}
+      </div>
+    </div>
+
+    <!-- FLOW 4: CHECKIN -->
+    <div class="diagram-box">
+      <div class="diagram-label">📅 Fluxo 4 — Check-in de Visita</div>
+      <div class="mermaid">
+sequenceDiagram
+    participant Resp as 👤 Responsável Ativo
+    participant API as 🔷 ASP.NET Core API
+    participant DB as 🐘 PostgreSQL (EF Core)
+    participant FCM as 🔔 Firebase FCM
+    participant Outro as 👤 Outro Responsável
+
+    Resp->>API: POST /attendance/checkin {eventId}
+    API->>API: Valida JWT Bearer + Policy("IsActiveGuardianForEvent")
+    API->>API: actualTime = DateTime.UtcNow (servidor — não confia no cliente)
+    API->>DB: INSERT attendance_records {status: CHECKIN, actualTime}
+    Note over DB: EF Core SaveChangesInterceptor confirma INSERT-ONLY
+    DB-->>API: recordId
+    API-->>Resp: 201 {recordId, actualTime}
+    API->>FCM: HttpClient FCM v1: "Check-in: [Filho] às [hora]"
+    FCM-->>Outro: Notificação push
+      </div>
+    </div>
+  </section>
+
+  <!-- ── NFR ── -->
+  <section id="nfr">
+    <div class="section-title"><span>📊</span> Requisitos Não-Funcionais</div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Requisito</th><th>Meta</th><th>Monitoramento</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>⏱️ Disponibilidade</td>
+            <td><span class="badge badge-green">99.9% uptime (SLA App Service P1v3)</span></td>
+            <td>Azure Monitor + Alertas</td>
+          </tr>
+          <tr>
+            <td>🚀 Latência API</td>
+            <td><span class="badge badge-blue">p95 &lt; 500ms</span></td>
+            <td>Application Insights</td>
+          </tr>
+          <tr>
+            <td>⚡ Latência SignalR</td>
+            <td><span class="badge badge-cyan">&lt; 100ms</span></td>
+            <td>Azure SignalR Service metrics</td>
+          </tr>
+          <tr>
+            <td>📄 Geração de PDF</td>
+            <td><span class="badge badge-purple">&lt; 180s (p95)</span></td>
+            <td>Service Bus + App Insights</td>
+          </tr>
+          <tr>
+            <td>🗂️ Armazenamento Blob</td>
+            <td>Ilimitado (pay-per-use)</td>
+            <td>Azure Cost Management</td>
+          </tr>
+          <tr>
+            <td>💾 Backup DB</td>
+            <td>PITR 35 dias (Azure Flexible Server)</td>
+            <td>Azure Monitor</td>
+          </tr>
+          <tr>
+            <td>🔄 RTO (Recuperação)</td>
+            <td><span class="badge badge-blue">&lt; 4 horas</span></td>
+            <td>Runbook documentado</td>
+          </tr>
+          <tr>
+            <td>🔒 Imutabilidade</td>
+            <td><span class="badge badge-green">100% tabelas críticas (dupla camada)</span></td>
+            <td>Trigger SQL + EF Core Interceptors</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── SECURITY ── -->
+  <section id="security">
+    <div class="section-title"><span>🔐</span> Segurança &amp; Conformidade</div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🔐 Mecanismos de Segurança</div>
+        <table>
+          <thead><tr><th>Mecanismo</th><th>Implementação .NET 8 + Azure</th></tr></thead>
+          <tbody>
+            <tr><td>Hash de CPF</td><td><code>SHA256.HashData()</code> com salt — não reversível</td></tr>
+            <tr><td>Hash de senha</td><td><code>PasswordHasher&lt;User&gt;</code> ASP.NET Core (PBKDF2, 600K iterações)</td></tr>
+            <tr><td>Autenticação</td><td>JWT Bearer + Refresh Token Rotation</td></tr>
+            <tr><td>2FA</td><td>TOTP via ASP.NET Core Identity <code>TwoFactorTokenProvider</code></td></tr>
+            <tr><td>Row Level Security</td><td>PostgreSQL RLS — isolamento por responsável</td></tr>
+            <tr><td>Imutabilidade (dupla)</td><td>Trigger SQL + EF Core <code>SaveChangesInterceptor</code></td></tr>
+            <tr><td>Integridade de dados</td><td><code>System.Security.Cryptography.SHA256</code> em ocorrências e PDFs</td></tr>
+            <tr><td>Gestão de segredos</td><td>Azure Key Vault + Managed Identity (zero credenciais em código)</td></tr>
+            <tr><td>Audit log</td><td>EF Core <code>AuditInterceptor</code> — INSERT-ONLY imutável</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📋 Conformidade</div>
+        <table>
+          <thead><tr><th>Regulamento</th><th>Implementação</th></tr></thead>
+          <tbody>
+            <tr><td>LGPD</td><td>Minimização de dados, consentimento explícito, soft-delete (is_active=false)</td></tr>
+            <tr><td>Validade Jurídica</td><td>Registros imutáveis + hash SHA-256 verificável externamente</td></tr>
+            <tr><td>Privacidade</td><td>RLS — responsável acessa apenas dados de seus filhos</td></tr>
+            <tr><td>Segurança de rede</td><td>Azure Front Door WAF (OWASP 3.2) + TLS 1.3 + SAS tokens Blob</td></tr>
+            <tr><td>Gestão de identidades</td><td>Managed Identity App Service → Key Vault (sem credenciais em config)</td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:16px" class="card-title">🛡️ Row Level Security — Tabelas Protegidas</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.65">
+          • <code>calendar_events</code> — filtrado por <code>parent_child.user_id</code><br>
+          • <code>messages</code> — filtrado por <code>parent_child.child_id</code><br>
+          • <code>incidents</code> — filtrado por <code>reported_by</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COSTS ── -->
+  <section id="costs">
+    <div class="section-title"><span>💰</span> Estimativa de Custos Azure (MVP ~500 usuários)</div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Serviço Azure</th><th>Configuração</th><th>Custo Estimado/mês</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🔷 Azure App Service</td>
+            <td>P1v3 Linux (2 instâncias auto-scale + staging slot)</td>
+            <td>~USD 74</td>
+          </tr>
+          <tr>
+            <td>🐘 Azure DB for PostgreSQL</td>
+            <td>Flexible Server B2ms — 2 vCores, 8 GB RAM</td>
+            <td>~USD 65</td>
+          </tr>
+          <tr>
+            <td>⚡ Azure Cache for Redis</td>
+            <td>Standard C1 — 1 GB (com réplica failover)</td>
+            <td>~USD 55</td>
+          </tr>
+          <tr>
+            <td>⚡ Azure SignalR Service</td>
+            <td>Standard — 1 Unit (1K conexões)</td>
+            <td>~USD 49</td>
+          </tr>
+          <tr>
+            <td>🌍 Azure Front Door Standard</td>
+            <td>CDN + WAF — tráfego MVP</td>
+            <td>~USD 35</td>
+          </tr>
+          <tr>
+            <td>📨 Azure Service Bus</td>
+            <td>Standard — 1M operações/mês</td>
+            <td>~USD 10</td>
+          </tr>
+          <tr>
+            <td>📊 Azure Monitor + App Insights</td>
+            <td>Logs + APM + traces básico</td>
+            <td>~USD 10</td>
+          </tr>
+          <tr>
+            <td>📄 Azure Container Apps</td>
+            <td>PDF Worker — serverless (paga por execução)</td>
+            <td>~USD 5</td>
+          </tr>
+          <tr>
+            <td>🗂️ Azure Blob Storage</td>
+            <td>50 GB LRS + transferência</td>
+            <td>~USD 4</td>
+          </tr>
+          <tr>
+            <td>📧 Azure Communication Services</td>
+            <td>10.000 emails/mês</td>
+            <td>~USD 1</td>
+          </tr>
+          <tr class="cost-total">
+            <td><strong>💰 TOTAL ESTIMADO</strong></td>
+            <td>MVP com ~500 usuários ativos — Azure Brazil South</td>
+            <td><strong>~USD 308/mês</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:16px;font-size:12px;color:var(--text-dim);line-height:1.7">
+        ⚠️ O custo Azure é ~2× o custo AWS equivalente, mas inclui serviços gerenciados de maior nível
+        (Azure SignalR Service, Service Bus com DLQ nativo, Front Door WAF unificado) que eliminariam custos operacionais
+        adicionais em AWS (Redis cluster para WebSocket, configuração WAF separada, SNS/SQS manual).
+        O aumento de custo é justificado pela redução de complexidade operacional e pelo alinhamento ao stack .NET.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💳 Modelo de Monetização</div>
+      <div class="grid-3">
+        <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center">
+          <div style="font-size:18px;font-weight:800;color:#fff">Gratuito</div>
+          <div style="font-size:24px;font-weight:800;color:var(--text-muted);margin:8px 0">R$ 0</div>
+          <div style="font-size:13px;color:var(--text-dim);line-height:1.6">Calendário básico<br>Chat (30 dias de histórico)</div>
+        </div>
+        <div style="background:rgba(29,78,216,.15);border:1px solid rgba(59,130,246,.4);border-radius:10px;padding:20px;text-align:center">
+          <div style="font-size:18px;font-weight:800;color:#93C5FD">Premium</div>
+          <div style="font-size:24px;font-weight:800;color:var(--primary-light);margin:8px 0">R$ 39,90<span style="font-size:13px;color:var(--text-dim)">/mês</span></div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.6">Todos os módulos<br>Relatórios PDF<br>2 anos de histórico</div>
+        </div>
+        <div style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);border-radius:10px;padding:20px;text-align:center">
+          <div style="font-size:18px;font-weight:800;color:#C4B5FD">Judicial</div>
+          <div style="font-size:24px;font-weight:800;color:var(--purple);margin:8px 0">R$ 89,90<span style="font-size:13px;color:var(--text-dim)">/mês</span></div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.6">Premium +<br>Modo Judicial<br>Assinaturas digitais</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Guarda360° — Documento de Arquitetura v2.0 · Gerado em 2026-02-24 · Agente @the-architect</div>
+    <div style="margin-top:6px">Stack: React 18 · <strong>ASP.NET Core 8 (.NET 8)</strong> · PostgreSQL 16 · SignalR · <strong>Microsoft Azure</strong> · Docker · GitHub Actions</div>
+    <div style="margin-top:4px;color:var(--text-dim)">Migração: Node.js/NestJS/AWS → .NET 8/ASP.NET Core/Azure · Clean Architecture + CQRS</div>
+  </footer>
+
+</main>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#512BD4',
+      primaryTextColor: '#E2E8F0',
+      primaryBorderColor: '#9B6CF0',
+      lineColor: '#64748B',
+      secondaryColor: '#1E293B',
+      tertiaryColor: '#253348',
+      background: '#0F172A',
+      mainBkg: '#1E293B',
+      nodeBorder: '#334155',
+      clusterBkg: '#1E293B',
+      titleColor: '#E2E8F0',
+      edgeLabelBackground: '#1E293B',
+      fontFamily: 'Segoe UI, system-ui, sans-serif',
+    },
+    flowchart: { curve: 'basis', padding: 20 },
+    sequence: {
+      actorMargin: 60,
+      boxTextMargin: 5,
+      noteMargin: 10,
+      messageMargin: 35,
+      mirrorActors: false,
+    }
+  });
+
+  // Sidebar active link highlight on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

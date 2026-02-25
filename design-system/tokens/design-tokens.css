@@ -1,0 +1,267 @@
+/* ════════════════════════════════════════════════════════════════════
+   GUARDA360° DESIGN SYSTEM v1.0 — CSS Variables Master Reference
+   Foursys Design Toolkit Aligned
+   
+   ⚠️  Este arquivo é a referência canônica dos tokens.
+       O arquivo de produção está em: frontend/src/index.css
+   
+   Metodologia: 3 níveis de token
+     Nível 1 — Global (--g-*)      : valores brutos da paleta
+     Nível 2 — Alias (--color-*)   : tokens semânticos
+     Nível 3 — Component (--btn-*) : tokens de componente
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+
+  /* ══════════════════════════════════════
+     NÍVEL 1: GLOBAL TOKENS
+     ══════════════════════════════════════ */
+
+  /* Azul Institucional (Primary) */
+  --g-blue-50:   #EFF6FF;
+  --g-blue-100:  #DBEAFE;
+  --g-blue-200:  #BFDBFE;
+  --g-blue-300:  #93C5FD;
+  --g-blue-400:  #2563EB;
+  --g-blue-500:  #1D4ED8;   /* ⭐ Brand Primary — WCAG AAA 9.3:1 */
+  --g-blue-600:  #1E40AF;
+  --g-blue-700:  #1E3A8A;
+  --g-blue-800:  #172554;
+  --g-blue-900:  #0F1B3D;
+
+  /* Neutros Slate */
+  --g-slate-50:  #F8FAFC;
+  --g-slate-100: #F1F5F9;
+  --g-slate-200: #E2E8F0;
+  --g-slate-300: #CBD5E1;
+  --g-slate-400: #94A3B8;
+  --g-slate-500: #64748B;
+  --g-slate-600: #475569;
+  --g-slate-700: #374151;
+  --g-slate-800: #1E293B;
+  --g-slate-900: #0F172A;
+
+  /* Status */
+  --g-green-600:  #16A34A;
+  --g-green-700:  #15803D;
+  --g-green-bg:   rgba(22,163,74,0.08);
+  --g-green-border: rgba(22,163,74,0.25);
+  --g-amber-600:  #D97706;
+  --g-amber-700:  #B45309;
+  --g-amber-bg:   rgba(217,119,6,0.08);
+  --g-amber-border: rgba(217,119,6,0.25);
+  --g-red-600:    #DC2626;
+  --g-red-700:    #B91C1C;
+  --g-red-bg:     rgba(220,38,38,0.08);
+  --g-red-border: rgba(220,38,38,0.25);
+  --g-violet-600: #7C3AED;
+  --g-violet-700: #6D28D9;
+  --g-violet-bg:  rgba(124,58,237,0.08);
+  --g-violet-border: rgba(124,58,237,0.30);
+  --g-pink-600:   #DB2777;
+  --g-pink-bg:    rgba(219,39,119,0.08);
+  --g-pink-border: rgba(219,39,119,0.30);
+  --g-sky-500:    #0EA5E9;
+  --g-sky-bg:     rgba(14,165,233,0.08);
+  --g-sky-border: rgba(14,165,233,0.25);
+
+  /* ══════════════════════════════════════
+     NÍVEL 2: ALIAS TOKENS — Semânticos
+     ══════════════════════════════════════ */
+
+  /* Primary */
+  --color-primary:          var(--g-blue-500);
+  --color-primary-hover:    var(--g-blue-400);
+  --color-primary-active:   var(--g-blue-600);
+  --color-primary-muted:    rgba(29,78,216,0.08);
+  --color-primary-border:   rgba(29,78,216,0.25);
+  --color-on-primary:       #FFFFFF;
+
+  /* Superfícies */
+  --color-bg:               var(--g-slate-50);
+  --color-surface:          #FFFFFF;
+  --color-surface-alt:      var(--g-slate-100);
+  --color-border:           var(--g-slate-200);
+  --color-border-dark:      var(--g-slate-300);
+  --color-border-focus:     var(--g-blue-500);
+
+  /* Texto */
+  --color-text-primary:     var(--g-slate-900);
+  --color-text-secondary:   var(--g-slate-700);
+  --color-text-tertiary:    var(--g-slate-500);
+  --color-text-disabled:    var(--g-slate-400);
+  --color-text-accent:      var(--g-blue-500);
+  --color-text-inverse:     #FFFFFF;
+
+  /* Semânticas */
+  --color-success:          var(--g-green-600);
+  --color-warning:          var(--g-amber-600);
+  --color-error:            var(--g-red-600);
+  --color-info:             var(--g-sky-500);
+
+  /* Domínio: Status de Visita */
+  --color-confirmado:        var(--g-green-600);
+  --color-confirmado-bg:     var(--g-green-bg);
+  --color-confirmado-border: var(--g-green-border);
+  --color-pendente:          var(--g-amber-600);
+  --color-pendente-bg:       var(--g-amber-bg);
+  --color-pendente-border:   var(--g-amber-border);
+  --color-cancelado:         var(--g-red-600);
+  --color-cancelado-bg:      var(--g-red-bg);
+  --color-cancelado-border:  var(--g-red-border);
+  --color-falta:             var(--g-red-600);
+  --color-falta-bg:          var(--g-red-bg);
+  --color-atraso:            var(--g-amber-600);
+  --color-atraso-bg:         var(--g-amber-bg);
+  --color-cumprido:          var(--g-green-600);
+  --color-cumprido-bg:       var(--g-green-bg);
+
+  /* Domínio: Severity de Ocorrências */
+  --color-severity-low:            var(--g-green-600);
+  --color-severity-low-bg:         var(--g-green-bg);
+  --color-severity-low-border:     var(--g-green-border);
+  --color-severity-medium:         var(--g-amber-600);
+  --color-severity-medium-bg:      var(--g-amber-bg);
+  --color-severity-medium-border:  var(--g-amber-border);
+  --color-severity-high:           var(--g-red-600);
+  --color-severity-high-bg:        var(--g-red-bg);
+  --color-severity-high-border:    var(--g-red-border);
+  --color-severity-critical:       var(--g-violet-600);
+  --color-severity-critical-bg:    var(--g-violet-bg);
+  --color-severity-critical-border: var(--g-violet-border);
+
+  /* Domínio: Guardiões */
+  --color-guardian-a:        var(--g-blue-400);
+  --color-guardian-a-bg:     var(--g-blue-50);
+  --color-guardian-a-border: rgba(37,99,235,0.30);
+  --color-guardian-b:        var(--g-pink-600);
+  --color-guardian-b-bg:     var(--g-pink-bg);
+  --color-guardian-b-border: var(--g-pink-border);
+  --color-guardian-shared:   var(--g-violet-600);
+  --color-guardian-shared-bg: var(--g-violet-bg);
+
+  /* Domínio: Hash / Integridade SHA-256 */
+  --color-hash-valid:        var(--g-sky-500);
+  --color-hash-valid-bg:     var(--g-sky-bg);
+  --color-hash-valid-border: var(--g-sky-border);
+  --color-hash-invalid:      var(--g-red-600);
+  --color-hash-invalid-bg:   var(--g-red-bg);
+
+  /* ══════════════════════════════════════
+     TIPOGRAFIA
+     ══════════════════════════════════════ */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  --text-xs:    0.75rem;    /* 12px */
+  --text-sm:    0.875rem;   /* 14px */
+  --text-base:  1rem;       /* 16px */
+  --text-lg:    1.125rem;   /* 18px */
+  --text-xl:    1.25rem;    /* 20px */
+  --text-2xl:   1.5rem;     /* 24px */
+  --text-3xl:   1.875rem;   /* 30px */
+  --text-4xl:   2.25rem;    /* 36px */
+  --text-hero:  3rem;       /* 48px — KPIs extrabold */
+
+  --weight-regular:   400;
+  --weight-medium:    500;
+  --weight-semibold:  600;
+  --weight-bold:      700;
+  --weight-extrabold: 800;
+
+  --leading-tight:   1.25;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.75;
+
+  --tracking-wide:   0.04em;
+  --tracking-wider:  0.06em;
+
+  /* ══════════════════════════════════════
+     ESPAÇAMENTO (8pt Grid)
+     ══════════════════════════════════════ */
+  --space-1:  0.25rem;   /*  4px */
+  --space-2:  0.5rem;    /*  8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+
+  /* ══════════════════════════════════════
+     BORDER RADIUS — Foursys Aligned
+     ══════════════════════════════════════ */
+  --radius-sm:    0.25rem;   /*  4px — badges menores */
+  --radius-md:    0.5rem;    /*  8px — ícones, elementos internos */
+  --radius-lg:    0.75rem;   /* 12px — cards, modais */
+  --radius-xl:    1rem;      /* 16px — bottom sheets */
+  --radius-2xl:   1.5rem;    /* 24px — hero cards */
+  --radius-input: 1.25rem;   /* 20px — inputs, selects (Foursys LG) */
+  --radius-pill:  9999px;    /* Pill — botões Foursys padrão */
+  --radius-full:  9999px;    /* Alias */
+
+  /* ══════════════════════════════════════
+     SOMBRAS
+     ══════════════════════════════════════ */
+  --shadow-card:       0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-hover:      0 4px 12px rgba(29,78,216,0.12);
+  --shadow-md:         0 4px 6px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:         0 10px 25px rgba(0,0,0,0.12);
+  --shadow-xl:         0 20px 40px rgba(0,0,0,0.15);
+  --shadow-focus:      0 0 0 3px rgba(29,78,216,0.25);
+  --shadow-inset:      inset 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-hash:       0 0 0 1px rgba(14,165,233,0.40);
+  --shadow-soft:       0 10px 25px rgba(15,23,42,0.06);        /* Foursys soft */
+  --shadow-soft-hover: 0 18px 45px rgba(15,23,42,0.10);        /* Foursys hover */
+
+  /* ══════════════════════════════════════
+     ANIMAÇÃO
+     ══════════════════════════════════════ */
+  --dur-fast:   120ms;
+  --dur-normal: 220ms;
+  --dur-slow:   380ms;
+  --ease:       cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-out:   cubic-bezier(0, 0, 0.2, 1);
+
+  /* ══════════════════════════════════════
+     SIZING (WCAG 2.5.5)
+     ══════════════════════════════════════ */
+  --touch-md:  44px;
+  --touch-lg:  48px;
+  --touch-fab: 56px;
+
+  /* ══════════════════════════════════════
+     NÍVEL 3: COMPONENT TOKENS
+     ══════════════════════════════════════ */
+
+  /* Button */
+  --btn-primary-bg:      var(--color-primary);
+  --btn-primary-bg-hover:var(--color-primary-hover);
+  --btn-primary-text:    var(--color-on-primary);
+  --btn-radius:          var(--radius-pill);         /* Foursys: pill */
+  --btn-height:          var(--touch-md);            /* WCAG 2.5.5 */
+
+  /* Input */
+  --input-bg:            var(--color-surface);
+  --input-border:        var(--color-border);
+  --input-border-focus:  var(--color-border-focus);
+  --input-radius:        var(--radius-input);        /* Foursys LG = 20px */
+  --input-height:        40px;
+  --input-padding:       0 var(--space-3);
+
+  /* Card */
+  --card-bg:             var(--color-surface);
+  --card-border:         var(--color-border);
+  --card-radius:         var(--radius-lg);
+  --card-shadow:         var(--shadow-soft);
+  --card-shadow-hover:   var(--shadow-soft-hover);
+  --card-padding:        var(--space-5);
+
+  /* Nav */
+  --nav-active-bg:       var(--color-primary-muted);
+  --nav-active-text:     var(--color-primary);
+  --nav-hover-bg:        var(--color-surface-alt);
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "Guarda360° Design System v1.0 — Spacing, Border Radius & Sizing Tokens",
+
+  "spacing": {
+    "$description": "8pt Grid — todos os valores são múltiplos de 4px. Foursys escala: 4, 8, 12, 16, 24, 32.",
+    "0":  { "$value": "0",       "$type": "dimension" },
+    "1":  { "$value": "0.25rem", "$type": "dimension", "$description": "4px" },
+    "2":  { "$value": "0.5rem",  "$type": "dimension", "$description": "8px" },
+    "3":  { "$value": "0.75rem", "$type": "dimension", "$description": "12px" },
+    "4":  { "$value": "1rem",    "$type": "dimension", "$description": "16px" },
+    "5":  { "$value": "1.25rem", "$type": "dimension", "$description": "20px" },
+    "6":  { "$value": "1.5rem",  "$type": "dimension", "$description": "24px" },
+    "8":  { "$value": "2rem",    "$type": "dimension", "$description": "32px" },
+    "10": { "$value": "2.5rem",  "$type": "dimension", "$description": "40px" },
+    "12": { "$value": "3rem",    "$type": "dimension", "$description": "48px" },
+    "16": { "$value": "4rem",    "$type": "dimension", "$description": "64px" },
+    "20": { "$value": "5rem",    "$type": "dimension", "$description": "80px" }
+  },
+
+  "border-radius": {
+    "$description": "Foursys: Pill para botões (default), LG para inputs/cards, MD para elementos menores",
+    "none": { "$value": "0",        "$type": "dimension" },
+    "sm":   { "$value": "0.25rem",  "$type": "dimension", "$description": "4px — badges, tags menores" },
+    "md":   { "$value": "0.5rem",   "$type": "dimension", "$description": "8px — elementos internos, ícones" },
+    "lg":   { "$value": "0.75rem",  "$type": "dimension", "$description": "12px — cards, modais, seções" },
+    "xl":   { "$value": "1rem",     "$type": "dimension", "$description": "16px — bottom sheets, drawers" },
+    "2xl":  { "$value": "1.5rem",   "$type": "dimension", "$description": "24px — hero cards" },
+    "input":{ "$value": "1.25rem",  "$type": "dimension", "$description": "20px — inputs, selects, textareas (Foursys LG)" },
+    "pill": { "$value": "9999px",   "$type": "dimension", "$description": "Pill — botões padrão Foursys, avatares, badges" },
+    "full": { "$value": "9999px",   "$type": "dimension", "$description": "Alias para pill" }
+  },
+
+  "sizing": {
+    "$description": "Tamanhos mínimos e fixos — WCAG 2.5.5 (min 44px touch target)",
+    "touch-md":  { "$value": "44px", "$type": "dimension", "$description": "Target mínimo WCAG" },
+    "touch-lg":  { "$value": "48px", "$type": "dimension" },
+    "touch-fab": { "$value": "56px", "$type": "dimension", "$description": "FAB (Floating Action Button)" },
+    "avatar-sm": { "$value": "28px", "$type": "dimension" },
+    "avatar-md": { "$value": "36px", "$type": "dimension" },
+    "avatar-lg": { "$value": "48px", "$type": "dimension" },
+    "avatar-xl": { "$value": "64px", "$type": "dimension" },
+    "sidebar":   { "$value": "240px","$type": "dimension" },
+    "header":    { "$value": "64px", "$type": "dimension" }
+  },
+
+  "z-index": {
+    "$description": "Camadas de sobreposição",
+    "base":     { "$value": "0",   "$type": "number" },
+    "dropdown": { "$value": "100", "$type": "number" },
+    "sticky":   { "$value": "200", "$type": "number" },
+    "overlay":  { "$value": "250", "$type": "number" },
+    "modal":    { "$value": "300", "$type": "number" },
+    "tooltip":  { "$value": "400", "$type": "number" },
+    "toast":    { "$value": "500", "$type": "number" }
+  },
+
+  "breakpoints": {
+    "$description": "Breakpoints responsivos — mobile-first",
+    "sm":  { "$value": "640px",  "$type": "dimension" },
+    "md":  { "$value": "768px",  "$type": "dimension" },
+    "lg":  { "$value": "1024px", "$type": "dimension" },
+    "xl":  { "$value": "1280px", "$type": "dimension" },
+    "2xl": { "$value": "1536px", "$type": "dimension" }
+  }
+}
