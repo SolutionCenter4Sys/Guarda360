@@ -214,6 +214,14 @@
   --touch-md:  44px;
   --touch-lg:  48px;
   --touch-fab: 56px;
+
+  /* ═══ Z-INDEX ═══ */
+  --z-base:    0;
+  --z-sticky:  40;
+  --z-overlay: 50;
+  --z-modal:   60;
+  --z-popover: 70;
+  --z-toast:   80;
 }
 
 /* ──────────────────────────────────────────────────────
